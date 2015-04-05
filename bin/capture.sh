@@ -28,7 +28,7 @@ echo "open url"
 /usr/bin/firefox -remote "openurl(https://www.ingress.com/intel?ll=34.845342,138.257545&z=13)"
 #firefox -remote "openurl(https://www.ingress.com/intel?ll=34.843652,138.219951&z=13)"
 
-sleep 30
+sleep 60
 echo "capture"
 /usr/bin/import -window root -silent $filename_tmp
 #convert -crop 1550x1200+30+266 ingress.png.org /tmp/ingress.png
