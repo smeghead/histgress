@@ -26,6 +26,7 @@ function find_images(d) {
 router.get('/get_images', function (req, res) {
 
   var today = new Date();
+  console.log('today:' + today);
 
   var images = find_images(today.toFormat('YYYYMMDD'));
 

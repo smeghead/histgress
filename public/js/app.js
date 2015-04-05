@@ -12,10 +12,14 @@ $(function(){
     var image = images[images.length - 1];
     console.log(image);
     console.log('images.length', images.length);
+
+    $('#loading').show();
+    document.body.style.cursor = 'wait';
     $('#map')
       .attr('src', image.url)
       .attr('width', image.width)
-      .attr('height', image.height);
+      .attr('height', image.height)
+      .on('load', function(){ $('#loading').hide(); document.body.style.cursor = 'default';});
       resizeBg();
     slider = $('#timeline').slider({
       max: images.length - 1,
@@ -39,9 +43,13 @@ $(function(){
     console.log($img.width() + 'x' + $img.height());
     console.log('resized', theWindow.width(), theWindow.height(), aspectRatio);
     if ( (theWindow.width() / theWindow.height()) < aspectRatio ) {
-      $img.removeClass().addClass('bgheight');
+      console.log('bgwidth');
+      $img.attr('width', '100%');
+      $img.attr('height', 100 * (1 - aspectRatio) + '%');
     } else {
-      $img.removeClass().addClass('bgwidth');
+      console.log('bgheight');
+      $img.attr('width', 100 * (1 - aspectRatio) + '%');
+      $img.attr('height', '100%');
     }
   }
   theWindow.resize(resizeBg).trigger("resize");
@@ -51,9 +59,15 @@ $(function(){
       if (typeof slider === 'undefined') return;
       var image = images[slider.slider('getValue')];
       console.log(image);
+      if (image.src == $('#map').attr('src')) return;
+
+      $('#loading').show();
+      document.body.style.cursor = 'wait';
       $('#map')
         .attr('src', image.url)
         .attr('width', image.width)
-        .attr('height', image.height);
+        .attr('height', image.height)
+        .on('load', function(){ $('#loading').hide();document.body.style.cursor = 'default';});
+      resizeBg();
   });
 });
