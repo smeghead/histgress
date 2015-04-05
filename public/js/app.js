@@ -1,36 +1,59 @@
 $(function(){
-	$('#timeline').slider({
-		formatter: function(value) {
-			return 'Current value: ' + value;
-		}
-	});
 
-	//‰Šú‰æ‘œæ“¾
-	$.getJSON('/get_images', function(data){
-		console.log(data);
+  var images = [];
+  var slider;
+  //ç”»åƒã®å–å¾—
+  $.getJSON('/get_images', function(data){
+    console.log(data);
     if (data.images.length === 0) {
       return;
     }
-    var images = data.images;
+    images = data.images;
+    var image = images[images.length - 1];
+    console.log(image);
+    console.log('images.length', images.length);
     $('#map')
-      .attr('src', images[0].url)
-      .attr('width', images[0].width)
-      .attr('height', images[0].height);
-	});
-
-  var theWindow = $(window),
-    $img = $("#map"),
-    aspectRatio = $img.width() / $img.height();
-  console.log($img.width() + 'x' + $img.height());
+      .attr('src', image.url)
+      .attr('width', image.width)
+      .attr('height', image.height);
+      resizeBg();
+    slider = $('#timeline').slider({
+      max: images.length - 1,
+      value: images.length - 1,
+      formatter: function(value) {
+        console.log('format 1', value);
+        var image = images[value];
+        console.log('format 2', image.url);
+        var paths = image.url.match(/(\d{8})\/(\d{4})/)
+        console.log(paths);
+        return paths[1].substring(0, 4) + '-' + paths[1].substring(4, 6) + '-' + paths[1].substring(6) + ' ' + 
+          paths[2].substring(0, 2) + ':' + paths[2].substring(2);
+      }
+    });
+  });
  
+  var theWindow = $(window);
   function resizeBg() {
+      var $img = $("#map"),
+      aspectRatio = $img.width() / $img.height();
+    console.log($img.width() + 'x' + $img.height());
+    console.log('resized', theWindow.width(), theWindow.height(), aspectRatio);
     if ( (theWindow.width() / theWindow.height()) < aspectRatio ) {
       $img.removeClass().addClass('bgheight');
     } else {
       $img.removeClass().addClass('bgwidth');
     }
   }
-  theWindow.resize(function() {
-    resizeBg();
-  }).trigger("resize");
+  theWindow.resize(resizeBg).trigger("resize");
+
+
+  $('input#timeline').on('change', function(){
+      if (typeof slider === 'undefined') return;
+      var image = images[slider.slider('getValue')];
+      console.log(image);
+      $('#map')
+        .attr('src', image.url)
+        .attr('width', image.width)
+        .attr('height', image.height);
+  });
 });
