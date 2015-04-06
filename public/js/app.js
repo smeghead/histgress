@@ -13,23 +13,14 @@ $(function(){
     console.log(image);
     console.log('images.length', images.length);
 
-    $('#loading').show();
-    document.body.style.cursor = 'wait';
-    $('#map')
-      .attr('src', image.url)
-      .attr('width', image.width)
-      .attr('height', image.height)
-      .on('load', function(){ $('#loading').hide(); document.body.style.cursor = 'default';});
-      resizeBg();
+    changeMap(image);
     slider = $('#timeline').slider({
       max: images.length - 1,
       value: images.length - 1,
+      tooltip: 'always',
       formatter: function(value) {
-        console.log('format 1', value);
         var image = images[value];
-        console.log('format 2', image.url);
         var paths = image.url.match(/(\d{8})\/(\d{4})/)
-        console.log(paths);
         return paths[1].substring(0, 4) + '-' + paths[1].substring(4, 6) + '-' + paths[1].substring(6) + ' ' + 
           paths[2].substring(0, 2) + ':' + paths[2].substring(2);
       }
@@ -40,34 +31,59 @@ $(function(){
   function resizeBg() {
       var $img = $("#map"),
       aspectRatio = $img.width() / $img.height();
-    console.log($img.width() + 'x' + $img.height());
-    console.log('resized', theWindow.width(), theWindow.height(), aspectRatio);
     if ( (theWindow.width() / theWindow.height()) < aspectRatio ) {
-      console.log('bgwidth');
       $img.attr('width', '100%');
       $img.attr('height', 100 * (1 - aspectRatio) + '%');
     } else {
-      console.log('bgheight');
       $img.attr('width', 100 * (1 - aspectRatio) + '%');
       $img.attr('height', '100%');
     }
   }
   theWindow.resize(resizeBg).trigger("resize");
 
+  function changeMap(image) {
+    var size = $('#map').css('background-size');
+    var position = $('#map').css('background-position');
+    console.log('size', size, 'position', position);
+
+    $('#loading').show();
+    document.body.style.cursor = 'wait';
+    $('#map')
+      .attr('src', image.url)
+      .attr('width', image.width)
+      .attr('height', image.height)
+      .on('load', function(){ $('#loading').hide(); document.body.style.cursor = 'default';});
+    resizeBg();
+    wheelzoom(document.querySelector('img#map'));
+    console.log('size', size, 'position', position);
+    $('#map')
+      .css('background-size', size)
+      .css('background-position', position)
+      console.log('zoom');
+  }
+
 
   $('input#timeline').on('change', function(){
-      if (typeof slider === 'undefined') return;
-      var image = images[slider.slider('getValue')];
-      console.log(image);
-      if (image.src == $('#map').attr('src')) return;
+    if (typeof slider === 'undefined') return;
+    var image = images[slider.slider('getValue')];
+    if (image.src == $('#map').attr('src')) return;
 
-      $('#loading').show();
-      document.body.style.cursor = 'wait';
-      $('#map')
-        .attr('src', image.url)
-        .attr('width', image.width)
-        .attr('height', image.height)
-        .on('load', function(){ $('#loading').hide();document.body.style.cursor = 'default';});
-      resizeBg();
+    changeMap(image);
   });
+
+  //キーボード操作
+  $(window).on('keyup', function(ev){
+    if (typeof slider === 'undefined') return;
+
+    var val = slider.slider('getValue');
+    switch (ev.keyCode) {
+       case 39: // ->
+         slider.slider('setValue', Math.min(val + 1, images.length - 1));
+         break;
+       case 37: // <-
+         slider.slider('setValue', Math.max(val - 1, 0));
+         break;
+     }
+  });
+
 });
