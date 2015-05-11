@@ -24,11 +24,12 @@ function find_images(d) {
   }
 }
 router.get('/get_images', function (req, res) {
+  var ymd = new Date().toFormat('YYYYMMDD');
+  if (req.query.date) {
+    ymd = req.query.date;
+  }
 
-  var today = new Date();
-  console.log('today:' + today);
-
-  var images = find_images(today.toFormat('YYYYMMDD'));
+  var images = find_images(ymd);
 
   images = images.map(function(filename){
     return {url: filename, width: 1348, height: 989};

@@ -17,6 +17,8 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/bootstrap-slider.css" rel="stylesheet">
 
+<link href="css/datepicker.css" type="text/css" rel="stylesheet">
+
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -29,22 +31,28 @@
       <div class="container">
         <img id="loading" src="/images/loading.gif">
         <img id="map">
+        <input type="text" id="date-picker" class="form-control">
       </div>
 
       <footer class="footer">
         <div class="container">
+          <a href="#" class="arrow arrow-right"></a>
+          <a href="#" class="arrow arrow-left"></a>
           <input id="timeline"
             data-slider-id="timeline"
             type="text"
             data-slider-min="0"
             data-slider-step="1" />
+          <p class="clearfix"></p>
         </div>
+
       </footer>
     </div>
 
-    <script src="/js/wheelzoom.js" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="/js/bootstrap-slider.js"></script>
+    <script src="/js/e-smart-zoom-jquery.js" type="text/javascript"></script>
+    <script src="js/bootstrap-datepicker.js" type="text/javascript"></script>
     <script src="/js/app.js"></script>
   </body>
 </html>
