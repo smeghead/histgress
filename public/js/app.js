@@ -130,6 +130,21 @@ $(function(){
     location.href = '#' + $(this).val().replace(/-/g, '');
     changeDate({date: $(this).val().replace(/-/g, '')});
   });
+
+  //play
+  $('#play').on('click', function(){
+    slider.slider('setValue', 0);
+    var max = slider.data('slider').getAttribute('max');
+    var timer = setInterval(function(){
+      var val = slider.slider('getValue');
+console.log('timer', 'val', val, 'max', max);
+      if (val >= max - 1) {
+        clearInterval(timer);
+      }
+      slider.slider('setValue', Math.min(val + 1, images.length - 1));
+    }, 2000);
+    
+  });
 });
 var toDoubleDigits = function(num) {
   num += "";
