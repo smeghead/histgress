@@ -23,21 +23,16 @@ echo "firefox start"
 
 sleep 20
 echo "open url"
-#firefox -remote "openurl(https://www.ingress.com/intel?ll=34.853091,138.283723&z=14)"
-#firefox -remote "openurl(https://www.ingress.com/intel?ll=34.845624,138.286384&z=13)"
-#firefox -remote "openurl(https://www.ingress.com/intel?ll=34.845342,138.27617&z=13)"
-#/usr/bin/firefox -remote "openurl(https://www.ingress.com/intel?ll=34.845342,138.257545&z=13)"
 /usr/bin/firefox -remote "openurl(https://www.ingress.com/intel?ll=34.841397,138.281063&z=14)"
-#firefox -remote "openurl(https://www.ingress.com/intel?ll=34.843652,138.219951&z=13)"
 
 sleep 90
 echo "capture"
 /usr/bin/import -window root -silent $filename_tmp
-#convert -crop 1550x1200+30+266 ingress.png.org /tmp/ingress.png
+
 echo "crop"
 /usr/bin/convert -crop 1500x1100+30+266 $filename_tmp $filename
 /usr/local/bin/pngquant --ext .png --speed 1 $filename --force
-killall /usr/bin/firefox
+killall firefox
 
 rm $filename_tmp
 echo "end"
